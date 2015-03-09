@@ -149,17 +149,17 @@ in
 
   users.mutableUsers = true;
 
-  users.extraUsers.brian = {
-    name = "brian";
+  users.extraUsers.bsmith = {
+    name = "bsmith";
     group = "users";
     uid = 1000;
     extraGroups = [ "wheel" ];
     createHome = true;
-    home = "/home/brian";
+    home = "/home/bsmith";
     shell = "/run/current-system/sw/bin/zsh";
   };
 
-  users.extraGroups.docker.members = [ "brian" ];
+  users.extraGroups.docker.members = [ "bsmith" ];
 
   # Should I use this instead? Both are currently broken.
   # networking.networkmanager.enable = true;
@@ -170,7 +170,7 @@ in
   # networking.useDHCP = false;
   # networking.wicd.enable = true;
 
-  networking.hostName = "bmckenna-nixos";
+  networking.hostName = "bsmith-nixos";
   networking.wireless.enable = true;
   hardware.bluetooth.enable = true;
 
@@ -178,7 +178,7 @@ in
 
   services.nixosManual.showManual = true;
 
-  services.btsync.deviceName = "bmckenna-nixos";
+  services.btsync.deviceName = "bsmith-nixos";
   services.btsync.enable = true;
   services.btsync.enableWebUI = true;
   services.btsync.httpListenAddr = "127.0.0.1";
