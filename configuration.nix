@@ -1,9 +1,10 @@
+# Edit this configuration file to define what should be installed on
+# your system.  Help is available in the configuration.nix(5) man page
+# and in the NixOS manual (accessible by running ‘nixos-help’).
+
 { config, pkgs, ... }:
 
 let
-  background = pkgs.runCommand "simpleenergy_wallpaper" {
-    bg = ./simpleenergy_wallpaper_laptop_center_2.png;
-  } "cp $bg $out";
   hsPackages = with pkgs.haskellPackages; [
     cabal2nix
     cabalInstall
@@ -30,18 +31,55 @@ in
       ./hardware-configuration.nix
     ];
 
-  boot.kernelPackages = pkgs.linuxPackages_3_17;
+  # Use the gummiboot efi boot loader.
   boot.loader.gummiboot.enable = true;
-  boot.loader.gummiboot.timeout = 5;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  boot.cleanTmpDir = true;
+  # networking.hostName = "nixos"; # Define your hostname.
+  networking.hostId = "f18ed587";
+  # networking.wireless.enable = true;  # Enables wireless.
 
-  time.timeZone = "America/Denver";
+  # Select internationalisation properties.
+  # i18n = {
+  #   consoleFont = "lat9w-16";
+  #   consoleKeyMap = "us";
+  #   defaultLocale = "en_US.UTF-8";
+  # };
 
+  # List packages installed in system profile. To search by name, run:
+  # $ nix-env -qaP | grep wget
+  # environment.systemPackages = with pkgs; [
+  #   wget
+  # ];
+
+  # List services that you want to enable:
+
+  # Enable the OpenSSH daemon.
+  # services.openssh.enable = true;
+
+  # Enable CUPS to print documents.
+  # services.printing.enable = true;
+
+  # Enable the X11 windowing system.
+  # services.xserver.enable = true;
+  # services.xserver.layout = "us";
+  # services.xserver.xkbOptions = "eurosign:e";
+
+  # Enable the KDE Desktop Environment.
+  # services.xserver.displayManager.kdm.enable = true;
+  # services.xserver.desktopManager.kde4.enable = true;
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # users.extraUsers.guest = {
+  #   isNormalUser = true;
+  #   uid = 1000;
+  # };
+  time.timeZone = "America/Los_Angeles";
   fonts.enableCoreFonts = true;
 
   nix.binaryCaches = [ http://cache.nixos.org http://hydra.nixos.org ];
+
+  programs.light.enable = true;
 
   environment.systemPackages = with pkgs; [
     ack
@@ -65,10 +103,10 @@ in
     mplayer
     nix-repl
     openconnect
-    oraclejdk8
     powertop
     rxvt_unicode
     sbt
+    vim
     scrot
     silver-searcher
     terminator
@@ -78,9 +116,6 @@ in
     xlibs.xev
     xlibs.xset
   ] ++ hsPackages;
-
-  programs.light.enable = true;
-
   services.xserver = {
     enable = true;
 
@@ -91,10 +126,6 @@ in
     displayManager = {
       desktopManagerHandlesLidAndPower = false;
       lightdm.enable = true;
-      sessionCommands = ''
-        ${pkgs.xlibs.xsetroot}/bin/xsetroot -cursor_name left_ptr
-        ${pkgs.feh}/bin/feh --bg-fill ${background}
-      '';
     };
     windowManager.default = "xmonad";
     windowManager.xmonad.enable = true;
@@ -102,7 +133,7 @@ in
     windowManager.xmonad.extraPackages = haskellPackages: [
       haskellPackages.taffybar
     ];
-
+    
     # TODO: Use the mtrack driver but do better than this.
     # multitouch.enable = true;
     # multitouch.invertScroll = true;
@@ -117,7 +148,7 @@ in
     synaptics.fingersMap = [ 0 0 0 ];
     synaptics.twoFingerScroll = true;
     synaptics.vertEdgeScroll = false;
-
+  
     videoDrivers = [ "nvidia" ];
 
     screenSection = ''
@@ -126,18 +157,16 @@ in
       Option "nvidiaXineramaInfoOrder" "DFP-2"
       Option "metamodes" "HDMI-0: nvidia-auto-select +0+0, DP-2: nvidia-auto-select +1920+0 {viewportin=1680x1050}"
     '';
-
+  
     xkbOptions = "terminate:ctrl_alt_bksp, ctrl:nocaps";
   };
-
+    
   nixpkgs.config = {
     allowUnfree = true;
     chromium.enablePepperFlash = true;
     chromium.enablePepperPDF = true;
-
+    
     packageOverrides = pkgs: {
-      jre = pkgs.oraclejre8;
-      jdk = pkgs.oraclejdk8;
       linux_3_17 = pkgs.linux_3_17.override {
         extraConfig =
         ''
@@ -146,9 +175,9 @@ in
       };
     };
   };
-
+    
   users.mutableUsers = true;
-
+    
   users.extraUsers.bsmith = {
     name = "bsmith";
     group = "users";
@@ -160,34 +189,15 @@ in
   };
 
   users.extraGroups.docker.members = [ "bsmith" ];
-
-  # Should I use this instead? Both are currently broken.
-  # networking.networkmanager.enable = true;
-  # networking.connman.enable = true;
-
-  # Sadly wicd worked less than wpa_supplicant
-  # networking.interfaceMonitor.enable = false;
-  # networking.useDHCP = false;
-  # networking.wicd.enable = true;
-
   networking.hostName = "bsmith-nixos";
   networking.wireless.enable = true;
-  hardware.bluetooth.enable = true;
-
   services.upower.enable = true;
-
-  services.nixosManual.showManual = true;
-
-  services.btsync.deviceName = "bsmith-nixos";
-  services.btsync.enable = true;
-  services.btsync.enableWebUI = true;
-  services.btsync.httpListenAddr = "127.0.0.1";
-
   services.openssh.enable = true;
   programs.ssh.agentTimeout = "12h";
-
-
-  virtualisation.docker.enable = true;
-
   programs.zsh.enable = true;
+
+
+
+
+
 }
