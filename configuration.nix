@@ -83,6 +83,7 @@ in
 
   environment.systemPackages = with pkgs; [
     ack
+    awesome
     acpi
     autojump
     axel
@@ -125,9 +126,9 @@ in
     desktopManager.xterm.enable = false;
     displayManager = {
       desktopManagerHandlesLidAndPower = false;
-      lightdm.enable = true;
     };
-    windowManager.default = "xmonad";
+    windowManager.default = "awesome";
+    windowManager.awesome.enable = true;
     windowManager.xmonad.enable = true;
     windowManager.xmonad.enableContribAndExtras = true;
     windowManager.xmonad.extraPackages = haskellPackages: [
@@ -149,7 +150,7 @@ in
     synaptics.twoFingerScroll = true;
     synaptics.vertEdgeScroll = false;
   
-    videoDrivers = [ "nvidia" ];
+    videoDrivers = [ "intel" ];
 
     screenSection = ''
       Option "DPI" "96 x 96"
