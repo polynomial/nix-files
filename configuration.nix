@@ -33,18 +33,19 @@ in
 
   # Use the gummiboot efi boot loader.
   boot.loader.gummiboot.enable = true;
+  boot.loader.gummiboot.timeout = 10;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "bsmith-laptop"; # Define your hostname.
   networking.hostId = "f18ed587";
-  # networking.wireless.enable = true;  # Enables wireless.
+  networking.wireless.enable = true;  # Enables wireless.
 
   # Select internationalisation properties.
-  # i18n = {
-  #   consoleFont = "lat9w-16";
-  #   consoleKeyMap = "us";
-  #   defaultLocale = "en_US.UTF-8";
-  # };
+  i18n = {
+    # consoleFont = "lat9w-16";
+    consoleKeyMap = "dvorak";
+    # defaultLocale = "en_US.UTF-8";
+  };
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
@@ -62,7 +63,6 @@ in
 
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
-  # services.xserver.layout = "us";
   # services.xserver.xkbOptions = "eurosign:e";
 
   # Enable the KDE Desktop Environment.
@@ -122,6 +122,9 @@ in
 
     vaapiDrivers = [ pkgs.vaapiIntel ];
 
+    layout = "us";
+
+    xkbVariant = "dvorak";
     desktopManager.default = "none";
     desktopManager.xterm.enable = false;
     displayManager = {
@@ -177,28 +180,20 @@ in
     };
   };
     
-  users.mutableUsers = true;
-    
   users.extraUsers.bsmith = {
     name = "bsmith";
     group = "users";
     uid = 1000;
+    isNormalUser = true;
     extraGroups = [ "wheel" ];
     createHome = true;
     home = "/home/bsmith";
     shell = "/run/current-system/sw/bin/zsh";
   };
 
-  users.extraGroups.docker.members = [ "bsmith" ];
-  networking.hostName = "bsmith-nixos";
-  networking.wireless.enable = true;
   services.upower.enable = true;
   services.openssh.enable = true;
   programs.ssh.agentTimeout = "12h";
   programs.zsh.enable = true;
-
-
-
-
 
 }
